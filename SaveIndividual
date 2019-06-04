@@ -1,0 +1,38 @@
+Sub flet1()
+'
+' flet1 Makro
+' 1) Merges active record and saves the resulting document named by the datafield     FileName"
+' 2) Closes the resulting document, and (assuming that we return to the template)
+' 3) advances to the next record in the datasource
+'
+'Søren Francis 6/7-2013
+
+    Dim DokName  As String   'ADDED CODE
+
+    With ActiveDocument.MailMerge
+        .Destination = wdSendToNewDocument
+        .SuppressBlankLines = True
+        With .DataSource
+            .FirstRecord = ActiveDocument.MailMerge.DataSource.ActiveRecord
+            .LastRecord = ActiveDocument.MailMerge.DataSource.ActiveRecord
+' Remember the wanted documentname
+           DokName = .DataFields("Last_Name").Value + "." + .DataFields("First_Name").Value        ' ADDED CODE
+        End With
+
+' Merge the active record
+        .Execute Pause:=False
+    End With
+
+' Save then resulting document. NOTICE MODIFIED filename
+    ActiveDocument.SaveAs2 FileName:="Z:\" + DokName + ".docx", FileFormat:= _
+        wdFormatXMLDocument, LockComments:=False, Password:="", AddToRecentFiles _
+        :=True, WritePassword:="", ReadOnlyRecommended:=False, EmbedTrueTypeFonts _
+        :=False, SaveNativePictureFormat:=False, SaveFormsData:=False, _
+        SaveAsAOCELetter:=False, CompatibilityMode:=14
+
+' Close the resulting document
+    ActiveWindow.Close
+
+' Now, back in the template document, advance to next record
+    ActiveDocument.MailMerge.DataSource.ActiveRecord = wdNextRecord
+End Sub
