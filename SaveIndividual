@@ -1,4 +1,4 @@
-Sub flet1()
+Sub SaveIndividual()
 '
 ' flet1 Makro
 ' 1) Merges active record and saves the resulting document named by the datafield     FileName"
